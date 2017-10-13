@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var contentIsSupported = 'content' in document.createElement('template');
 
     if (contentIsSupported) {
-        fetch('https://pokeapi.co/api/v2/pokemon/?limit=2') //TODO: Implement pagination.
+        fetch('https://pokeapi.co/api/v2/pokemon/?limit=20') //TODO: Implement pagination.
             .then(data => data.json())
             .then(function (data) {
                 mainPage.setup(data);
@@ -26,14 +26,15 @@ class Page {
 
         //console.log(data.types[0].type.name);
 
-        // for (var j = 0; j <= data.types.length; j++){
-        //     var span = document.createElement('span');
-        //     span.setAttribute('class', 'pill');
-        //     var text = document.createTextNode(data.types[j].type.name);
-        //     span.appendChild(text);
-        //     types.appendChild(span);
-        // }
+        for (var j = 0; j < data.types.length; j++){
+            var span = document.createElement('span');
+            span.setAttribute('class', 'pill');
+            var text = document.createTextNode(data.types[j].type.name);
+            span.appendChild(text);
+            types.appendChild(span);
+        }
 
+        //favorite.whatever = data.isFavorite;
         name.textContent = data.name;
         img.setAttribute('src', data.sprites.front_default);
         img.setAttribute('class', 'image card-image-top');
@@ -43,6 +44,9 @@ class Page {
         var parent = document.querySelector("#itemList");
         var childClone = childObj.cloneNode(true);
         parent.appendChild(childClone);
+
+        var favoriteButton = galleryItemClone.querySelector(".btn");
+        //pokeData.attachFavoriteToggleEvent(favoriteButton);
     }
 }
 class Pokedata {
@@ -55,9 +59,21 @@ class Pokedata {
         }
     }
     getPokemon(oneResult) {
-        var isInLocal = false; //TODO: Check if in localStorage
-        if (isInLocal) {
-            //TODO: Prepare template from cached version
+        var isInPokeStore;
+        var posInPokeStore;
+
+        this.pokeStore.forEach(function (arrayMember, i) {
+            if (arrayMember.name === oneResult.name) {
+                var msSinceRefresh = new Date() - new Date(arrayMember.lastRefreshed);
+                if (msSinceRefresh < (60 * 60 * 1000)) {
+                    isInPokeStore = true;
+                    posInPokeStore = i;
+                }
+
+            }
+        });
+        if (isInPokeStore) {
+            mainPage.prepareTemplates(this.pokeStore[posInPokeStore]);
         }
         else {
             this.fetchFromAPI(oneResult)
@@ -90,6 +106,10 @@ class Pokedata {
         }
 
         localStorage.setItem('pokeStore', JSON.stringify(this.pokeStore));
+    }
+    toggleFavorite(){
+        var pokemonName = event.srcElement.parentElement.children[1].textContent;
+        //TODO: Actually toggle favorite in data and change appearance of button.
     }
 }
 var mainPage = new Page();
