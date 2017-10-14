@@ -1,18 +1,91 @@
-.col-4 {
+.col-md-3, .col-lg-3, .col-xl-3 {
     display: inline-block;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+.col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xl-6 {
+    display: inline-block;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+.col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xl-4 {
+    display: inline-block;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+.col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xl-8 {
+    display: inline-block;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+.name {
+    text-transform: capitalize;
 }
 .pill {
     border-radius: 3px;
     line-height: 18px;
     max-width: 110px;
-    margin: 0 1.5625% 0 0;
-    width: 38.4375%;
+    margin: 5px 0 5px 0;
+    width: 50%;
     float: left;
-    text-transform: none;
+    text-transform: capitalize;
     font-size: 11px;
     text-align: center
 }
 .image {
     text-align: center;
 }
+.abilities {
+    min-height: 28px;
+}
+.heart {
+    background: url("../img/hearts.png") no-repeat;
+    background-size: 200% 100%;
+    width: 64px;
+    height: 64px;
+    float: right;
+}
+button {
+    border: none;
+}
+button:focus {
+    outline: none;
+}
 
+.modal h5 {
+    text-transform: capitalize;
+}
+.examineImg {
+    text-align: center;
+}
+.examineStats {
+    padding: 0 15px 15px 15px;
+}
+.statContainer {
+    background-color: #c8c8c8;
+    margin: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+
+}
+.stat {
+    text-align: left;
+    padding-right: 20px;
+    line-height: 18px;
+    color: white;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding-left: 5px;
+}
+
+.speed {background-color: rgba(48, 172, 63, 0.5)}
+.defense {background-color: rgba(100, 78, 172, 0.51)}
+.hp {background-color: rgba(172, 53, 59, 0.51)}
+.attack {background-color: rgba(172, 169, 30, 0.5)}
+.special-attack {background-color: rgba(172, 49, 166, 0.51)}
+.special-defense {background-color: rgba(46, 166, 172, 0.51)}
+
+.card > div > div:last-child > div:last-child * {
+    text-transform: capitalize;
+}
