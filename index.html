@@ -15,29 +15,38 @@
     <![endif]-->
 </head>
 <body>
-
-<section id="itemList" class="container">
-
+<section class="container bar">
+    <div class="row">
+        <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7"></div>
+        <div class="comparisonContainer col-sm-5 col-md-5 col-lg-5 col-xl-5">
+            <button class="compareTwoPokemon" data-toggle="modal" data-target="#comparisonModal" disabled>
+                Compare Pokemon
+            </button>
+        </div>
+    </div>
 </section>
+<section id="itemList" class="container"></section>
 <template id="galleryItemTemplate">
-    <!--TODO: Include tickboxes for comparison-->
     <article class="item col-sm-12 col-xs-12 col-md-3 col-lg-3 col-xl-3">
         <div class="card">
             <div class="pokeCard card-body">
                 <h2 class="name card-title">Heading</h2>
                 <div class="abilities col-12"></div>
                 <div class="col-12">
-                    <button type="button" class="examine btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#myModal">
+                    <button type="button" class="examine btn btn-sm btn-block" data-toggle="modal" data-target="#pokeModal">
                         Examine
+                    </button>
+                    <button type="button" class="compare btn btn-sm btn-block">
+                        Compare
                     </button>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="pokeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="title"></h5>
+                        <h5 class="modal-title"></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -78,11 +87,86 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="comparisonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                    <h3></h3>
+                                    <div class="compareImg0 col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"></div>
+                                    <div class="compareStats0 col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"></div>
+                                    <div class="card">
+                                        <div class="card-block">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                                        <h5>Height</h5>
+                                                        <p></p>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                                        <h5>Weight</h5>
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                        <h5>Abilities</h5>
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                    <h3></h3>
+                                    <div class="compareImg1 col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"></div>
+                                    <div class="compareStats1 col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"></div>
+                                    <div class="card">
+                                        <div class="card-block">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                                        <h5>Height</h5>
+                                                        <p></p>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                                        <h5>Weight</h5>
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                        <h5>Abilities</h5>
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </article>
 </template>
-
-<!--TODO: Next and previous buttons-->
-
+<section class="container">
+    <a class="prev btn float-left" href="">Previous</a>
+    <a class="next btn float-right" href="">Next</a>
+</section>
 
 <!-- Bootstrap and dependencies -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

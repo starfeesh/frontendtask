@@ -3,20 +3,32 @@
     margin-top: 1%;
     margin-bottom: 1%;
 }
-.col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xl-6 {
-    display: inline-block;
-    margin-top: 1%;
-    margin-bottom: 1%;
-}
-.col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xl-4 {
-    display: inline-block;
-    margin-top: 1%;
-    margin-bottom: 1%;
-}
+.col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xl-6,
+.col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xl-4,
 .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xl-8 {
     display: inline-block;
     margin-top: 1%;
     margin-bottom: 1%;
+}
+.compareName {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    line-height: 2;
+    margin: 2% 1% 2% 1%
+}
+.compareTwoPokemon {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    line-height: 2;
+    background-color: rgba(143, 143, 143, 0.5);
+    margin: 2% 1% 2% 1%;
+    box-shadow: none;
+}
+.hide {
+    background-color: transparent;
+    margin-left: 5px;
 }
 .name {
     text-transform: capitalize;
@@ -41,17 +53,31 @@
 .heart {
     background: url("../img/hearts.png") no-repeat;
     background-size: 200% 100%;
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     float: right;
 }
-button {
+.heart:focus {
+    background-color: transparent;
+}
+.btn, button {
     border: none;
-}
-button:focus {
     outline: none;
+    box-shadow: none;
+    background-color: rgba(143, 143, 143, 0.5);
+    margin: 2% 1% 2% 1%;
+    text-transform: capitalize;
 }
-
+.btn:focus, button:focus {
+    outline: none;
+    box-shadow: none;
+}
+.btn:active, button:active {
+    background-color: rgba(132, 132, 132, 0.75);
+}
+.btn-sm {
+    line-height: 1;
+}
 .modal h5 {
     text-transform: capitalize;
 }
@@ -60,6 +86,7 @@ button:focus {
 }
 .examineStats {
     padding: 0 15px 15px 15px;
+    text-transform: capitalize;
 }
 .statContainer {
     background-color: #c8c8c8;
@@ -67,7 +94,13 @@ button:focus {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-
+    min-height :11px;
+}
+.modal h3 {
+    text-transform: capitalize;
+}
+span {
+    text-transform: capitalize;
 }
 .stat {
     text-align: left;
@@ -77,15 +110,24 @@ button:focus {
     font-size: 11px;
     text-transform: uppercase;
     padding-left: 5px;
+    min-height :11px;
 }
-
 .speed {background-color: rgba(48, 172, 63, 0.5)}
 .defense {background-color: rgba(100, 78, 172, 0.51)}
 .hp {background-color: rgba(172, 53, 59, 0.51)}
 .attack {background-color: rgba(172, 169, 30, 0.5)}
 .special-attack {background-color: rgba(172, 49, 166, 0.51)}
 .special-defense {background-color: rgba(46, 166, 172, 0.51)}
-
 .card > div > div:last-child > div:last-child * {
     text-transform: capitalize;
+}
+#comparisonModal .modal-title {
+    text-transform: capitalize;
+}
+#comparisonModal .card > div > div:last-child > div:last-child * {
+    text-transform: capitalize;
+}
+#comparisonModal .card {
+    margin-top: 5%;
+    border: none;
 }

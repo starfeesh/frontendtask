@@ -1,15 +1,40 @@
+// Listen for DOM loaded, check for template support and set up pagination.
+// Pagination is not very robust, as it simply reads from the ? regardless of parameter.
 document.addEventListener("DOMContentLoaded", function () {
     var contentIsSupported = 'content' in document.createElement('template');
-
     if (contentIsSupported) {
-        fetch('https://pokeapi.co/api/v2/pokemon/?limit=4') //TODO: Implement pagination.
+        var startPokemon;
+        if (window.location.href.indexOf("?") === -1) {
+            startPokemon = 0;
+        } else {
+            startPokemon = parseInt(window.location.href.substr(window.location.href.indexOf("?") + 1));
+        }
+        var pokemonPerPage = 8;
+        var prevPage = window.location.pathname + "?" + (startPokemon - pokemonPerPage);
+        var nextPage = window.location.pathname + "?" + (startPokemon + pokemonPerPage);
+        mainPage.pagination(prevPage, nextPage);
+
+        var fetchURL = "https://pokeapi.co/api/v2/pokemon/?limit=" + pokemonPerPage + "&offset=" + startPokemon;
+        fetch(fetchURL)
             .then(data => data.json())
             .then(function (data) {
                 mainPage.setup(data);
             });
     }
+    compareData = new CompareData();
+    if (typeof compareData !== "undefined"){
+        mainPage.addComparisonButtons();
+    }
 });
+// This class handles the population and styling of the page.
 class Page {
+    pagination(prev, next) {
+        var prevButton = document.querySelector(".prev");
+        var nextButton = document.querySelector(".next");
+
+        prevButton.href = prev;
+        nextButton.href = next;
+    }
     setup(data) {
         var results = data.results;
         results.forEach(function (oneResult) {
@@ -25,7 +50,7 @@ class Page {
         var card = galleryItemClone.querySelector(".pokeCard");
         var heart = document.createElement("button");
         var examineButton = galleryItemClone.querySelector(".examine");
-        var closeButton = galleryItemClone.querySelector(".close");
+        var compareButton = galleryItemClone.querySelector(".compare");
 
         for (var j = 0; j < data.types.length; j++){
             var span = document.createElement('span');
@@ -54,11 +79,16 @@ class Page {
                 case "normal":
                     span.style.backgroundColor = "rgba(56, 166, 166, 0.5)";
                     break;
+                case "ground":
+                    span.style.backgroundColor = "rgba(132, 73, 47, 0.50)";
+                    break;
+                case "electric":
+                    span.style.backgroundColor = "rgba(0, 96, 132, 0.50)";
+                    break;
                 default:
                     span.style.backgroundColor = "rgba(143, 143, 143, 0.5)";
                     break;
             }
-
             span.appendChild(text);
             types.appendChild(span);
         }
@@ -70,7 +100,7 @@ class Page {
         heart.setAttribute('onclick', 'pokeData.toggleFavorite()');
         heart.setAttribute('class', 'heart');
         examineButton.setAttribute('onclick', 'pokeData.examinePokemon()'); //TODO: Call from Page
-        closeButton.setAttribute('onclick', 'mainPage.closeExamine()');
+        compareButton.setAttribute('onclick', 'compareData.updateComparisons()'); //TODO: Call from Page
 
         if (data.isFavorite) {
             this.setHeart(heart, true)
@@ -81,8 +111,8 @@ class Page {
         var parent = document.querySelector("#itemList");
         var childClone = childObj.cloneNode(true);
         parent.appendChild(childClone);
-
     }
+    // Set "Favorite" heart based off of the current status of the heart.
     setHeart(heart, status) {
         if (status) {
             heart.style.backgroundPosition = "100% 0";
@@ -90,7 +120,54 @@ class Page {
             heart.style.backgroundPosition = "0 0";
         }
     }
+    //TODO: Fix a bug that occurs when removing both of the comparison buttons and adding a new one.
+    //TODO: Causes an array entry to become lodged in the array, due to the way the buttons are removed.
+    addComparisonButtons() {
+        if (compareData.comparisons.length > 0) {
+            this.comparisonContainer = document.querySelector(".comparisonContainer");
+            this.compareButton = this.comparisonContainer.querySelector(".compareTwoPokemon");
+
+            var compareCount = compareData.comparisons.length;
+            var indexToAdd;
+            if (compareCount > 1) {
+                indexToAdd = 1;
+                this.compareButton.disabled = false;
+                this.compareButton.style.backgroundColor = "rgba(255, 225, 58, 0.25)";
+                this.compareButton.style.boxShadow = "0 0 0 3px rgba(255, 225, 58, 0.51)";
+                this.compareButton.addEventListener('click', function () {
+                    compareData.comparePokemon(compareData.comparisons)
+                });
+            }
+            else {
+                indexToAdd = 0;
+            }
+            var button = document.createElement('button');
+            button.setAttribute('class', 'compareName');
+            button.textContent = compareData.comparisons[indexToAdd].name;
+
+            var pokeSpan = document.createElement('span');
+            pokeSpan.setAttribute('class', 'hide');
+            pokeSpan.textContent = "\u2A09";
+
+            button.appendChild(pokeSpan);
+            this.comparisonContainer.appendChild(button);
+
+            pokeSpan.addEventListener('click', function () {
+                this.removeComparisonButton(compareData.comparisons[indexToAdd], indexToAdd, button, pokeSpan);
+            }.bind(this));
+        }
+    }
+    removeComparisonButton(data, posInComparisonsArray, button, span) {
+        button.removeChild(span);
+        this.comparisonContainer.removeChild(button);
+        this.compareButton.disabled = true;
+        this.compareButton.style.backgroundColor = "rgba(143, 143, 143, 0.5)";
+        this.compareButton.style.boxShadow = "none";
+        compareData.removeData(data, posInComparisonsArray); // posInComparisonsArray breaks here, when all data appears to be removed.
+    }
 }
+// This class handles the pushing and pulling of data from localStorage,
+// as well as fetching from the API when the data becomes stale (currently 10 minutes).
 class Pokedata {
     constructor() {
         if (localStorage.getItem("pokeStore") === null) {
@@ -154,6 +231,7 @@ class Pokedata {
     updateLocalStorage() {
         localStorage.setItem('pokeStore', JSON.stringify(this.pokeStore));
     }
+    //TODO: Create additional modal to display currently favorited Pokemon.
     toggleFavorite(){
         var pokemonName = event.srcElement.parentElement.querySelector("h2.name").textContent;
         this.pokeStore.forEach(function (arrayMember, i) {
@@ -180,5 +258,48 @@ class Pokedata {
         });
     }
 }
+// CompareData manages the comparisons array, pushing when a new entry is selected.
+// Currently a bug prevents removeData from correctly splicing the entries from the array, causing this to break.
+class CompareData {
+    constructor() {
+        if (localStorage.getItem("comparisons") === null){
+            this.comparisons = []
+        }
+        else {
+            this.comparisons = JSON.parse(localStorage.getItem("comparisons"));
+        }
+    }
+    updateComparisons(){
+        var pokemonName = event.srcElement.parentElement.parentElement.querySelector("h2.name").textContent;
+        pokeData.pokeStore.forEach(function (arrayMember, i) {
+            if (arrayMember.name === pokemonName){
+                if (this.comparisons.length >= 0 && this.comparisons.length < 2) {
+                    if (!this.comparisons.find(obj => obj.name === pokemonName)) // Less robust solution, as find searches the entire array.
+                    {
+                        this.comparisons.push(arrayMember);
+                        mainPage.addComparisonButtons();
+                        this.updateLocalStorage();
+                    }
+                }
+            }
+        }.bind(this));
+    }
+    removeData(data, posInComparisonsArray){
+        this.comparisons.splice(posInComparisonsArray, 1);
+        this.updateLocalStorage();
+    }
+    updateLocalStorage(){
+        localStorage.setItem('comparisons', JSON.stringify(this.comparisons));
+    }
+    //TODO: Fix bug that occurs when removing the first Pokemon from comparison and adding another.
+    //TODO: Causes comparison view to display removed Pokemon and newly added Pokemon.
+    comparePokemon(comparisons) {
+        if (comparisons.length === 2) {
+            var compare = new Compare(comparisons);
+            compare.setModalContent();
+        }
+    }
+}
 var mainPage = new Page();
 var pokeData = new Pokedata();
+var compareData;
